@@ -1255,7 +1255,7 @@ function EnrollEmployeeModal({
             <div className="flex space-x-2">
               <select
                 value={employeeContributionType}
-                onChange={(e) => setEmployeeContributionType(e.target.value)}
+                onChange={(e) => setEmployeeContributionType(e.target.value as 'fixed' | 'percentage')}
                 className="w-32 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
               >
                 <option value="fixed">Fixed amount</option>
@@ -1539,7 +1539,7 @@ function EditContributionModal({
             <div className="flex space-x-2">
               <select
                 value={employeeContributionType}
-                onChange={(e) => setEmployeeContributionType(e.target.value)}
+                onChange={(e) => setEmployeeContributionType(e.target.value as 'fixed' | 'percentage')}
                 className="w-32 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
               >
                 <option value="fixed">Fixed amount</option>

@@ -1,0 +1,36 @@
+[1mdiff --git a/app/payroll/benefits/page.tsx b/app/payroll/benefits/page.tsx[m
+[1mindex f68d5f4..60789c1 100644[m
+[1m--- a/app/payroll/benefits/page.tsx[m
+[1m+++ b/app/payroll/benefits/page.tsx[m
+[36m@@ -1255,7 +1255,7 @@[m [mfunction EnrollEmployeeModal({[m
+             <div className="flex space-x-2">[m
+               <select[m
+                 value={employeeContributionType}[m
+[31m-                onChange={(e) => setEmployeeContributionType(e.target.value)}[m
+[32m+[m[32m                onChange={(e) => setEmployeeContributionType(e.target.value as 'fixed' | 'percentage')}[m
+                 className="w-32 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"[m
+               >[m
+                 <option value="fixed">Fixed amount</option>[m
+[36m@@ -1539,7 +1539,7 @@[m [mfunction EditContributionModal({[m
+             <div className="flex space-x-2">[m
+               <select[m
+                 value={employeeContributionType}[m
+[31m-                onChange={(e) => setEmployeeContributionType(e.target.value)}[m
+[32m+[m[32m                onChange={(e) => setEmployeeContributionType(e.target.value as 'fixed' | 'percentage')}[m
+                 className="w-32 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"[m
+               >[m
+                 <option value="fixed">Fixed amount</option>[m
+[1mdiff --git a/next.config.js b/next.config.js[m
+[1mindex dafb0c8..3ccc43d 100644[m
+[1m--- a/next.config.js[m
+[1m+++ b/next.config.js[m
+[36m@@ -1,8 +1,6 @@[m
+ /** @type {import('next').NextConfig} */[m
+ const nextConfig = {[m
+[31m-  experimental: {[m
+[31m-    appDir: true,[m
+[31m-  },[m
+[32m+[m[32m  // App directory is stable in Next.js 14, no experimental config needed[m
+ }[m
+ [m
+ module.exports = nextConfig[m
