@@ -228,8 +228,8 @@ export default function EmployeesPage() {
       return aVal < bVal ? -direction : aVal > bVal ? direction : 0
     })
 
-  const departments = [...new Set(employees.map(emp => emp.department))]
-  const statuses = [...new Set(employees.map(emp => emp.status))]
+  const departments = Array.from(new Set(employees.map(emp => emp.department)))
+  const statuses = Array.from(new Set(employees.map(emp => emp.status)))
 
   const handleSort = (field: keyof Employee) => {
     if (sortField === field) {
