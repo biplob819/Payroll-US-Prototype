@@ -874,6 +874,21 @@ function TaxDetailPanel({ tax, onClose }: { tax: TaxLiability, onClose: () => vo
 
 // Form Detail Modal Component
 function FormDetailModal({ form, onClose }: { form: TaxForm, onClose: () => void }) {
+  const getStatusColor = (status: string) => {
+    switch (status?.toLowerCase()) {
+      case 'filed':
+      case 'completed':
+        return 'bg-green-100 text-green-800'
+      case 'due':
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800'
+      case 'overdue':
+        return 'bg-red-100 text-red-800'
+      default:
+        return 'bg-gray-100 text-gray-800'
+    }
+  }
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">

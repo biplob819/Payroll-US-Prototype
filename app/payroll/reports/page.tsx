@@ -1844,7 +1844,7 @@ function ExportModal({ reportType, onClose }: { reportType: string, onClose: () 
   const [exportComplete, setExportComplete] = useState(false)
 
   const handleExport = () => {
-    if (exportOptions.usePassword && exportOptions.password.length < 6) {
+    if (exportOptions.usePassword && (!exportOptions.password || exportOptions.password.length < 6)) {
       return
     }
 
@@ -1979,9 +1979,9 @@ function ExportModal({ reportType, onClose }: { reportType: string, onClose: () 
             </button>
             <button
               onClick={handleExport}
-              disabled={exportOptions.usePassword && exportOptions.password.length < 6}
+              disabled={exportOptions.usePassword && (!exportOptions.password || exportOptions.password.length < 6)}
               className={`flex items-center px-6 py-2 rounded-lg font-medium transition-colors ${
-                (!exportOptions.usePassword || exportOptions.password.length >= 6)
+                (!exportOptions.usePassword || (exportOptions.password && exportOptions.password.length >= 6))
                   ? 'bg-gray-800 text-white hover:bg-gray-900'
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}

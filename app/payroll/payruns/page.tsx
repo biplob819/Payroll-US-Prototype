@@ -440,7 +440,7 @@ export default function PayRunsPage() {
                 {showOffCycleForm ? (
                   <OffCyclePayrollForm 
                     onBack={() => setShowOffCycleForm(false)}
-                    onSave={(offCycleData) => {
+                    onSave={(offCycleData: any) => {
                       console.log('Saving off-cycle payroll:', offCycleData)
                       setShowOffCycleForm(false)
                     }}
@@ -448,7 +448,7 @@ export default function PayRunsPage() {
                 ) : showBonusForm ? (
                   <BonusPayrollForm 
                     onBack={() => setShowBonusForm(false)}
-                    onSave={(bonusData) => {
+                    onSave={(bonusData: any) => {
                       console.log('Saving bonus payroll:', bonusData)
                       setShowBonusForm(false)
                       // Here you would normally save to your backend
@@ -507,7 +507,7 @@ export default function PayRunsPage() {
 }
 
 // Bonus Payroll Form Component
-function BonusPayrollForm({ onBack, onSave }) {
+function BonusPayrollForm({ onBack, onSave }: { onBack: () => void; onSave: (data: any) => void }) {
   const [bonusData, setBonusData] = useState({
     payPeriod: '',
     payDate: '',
@@ -521,9 +521,9 @@ function BonusPayrollForm({ onBack, onSave }) {
     ]
   })
 
-  const [errors, setErrors] = useState({})
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
-  const handleEmployeeBonusChange = (employeeId, bonusAmount) => {
+  const handleEmployeeBonusChange = (employeeId: string, bonusAmount: string) => {
     setBonusData(prev => ({
       ...prev,
       employees: prev.employees.map(emp => 
@@ -532,7 +532,7 @@ function BonusPayrollForm({ onBack, onSave }) {
     }))
   }
 
-  const handleEmployeeToggle = (employeeId) => {
+  const handleEmployeeToggle = (employeeId: string) => {
     setBonusData(prev => ({
       ...prev,
       employees: prev.employees.map(emp => 
@@ -544,20 +544,20 @@ function BonusPayrollForm({ onBack, onSave }) {
   const calculateTotalBonus = () => {
     return bonusData.employees
       .filter(emp => emp.included && emp.bonusAmount)
-      .reduce((total, emp) => total + parseFloat(emp.bonusAmount || 0), 0)
+      .reduce((total, emp) => total + parseFloat(emp.bonusAmount || '0'), 0)
   }
 
-  const calculateSupplementalTax = (bonusAmount) => {
+  const calculateSupplementalTax = (bonusAmount: number) => {
     return bonusAmount * 0.22 // 22% federal supplemental tax rate
   }
 
-  const calculateNetBonus = (bonusAmount) => {
+  const calculateNetBonus = (bonusAmount: number) => {
     const tax = calculateSupplementalTax(bonusAmount)
     return bonusAmount - tax
   }
 
   const validateForm = () => {
-    const newErrors = {}
+    const newErrors: Record<string, string> = {}
     const hasAnyBonus = bonusData.employees.some(emp => emp.included && emp.bonusAmount)
     
     if (!hasAnyBonus) {
@@ -715,7 +715,7 @@ function BonusPayrollForm({ onBack, onSave }) {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {bonusData.employees.map((employee) => {
-                    const bonusAmount = parseFloat(employee.bonusAmount || 0)
+                    const bonusAmount = parseFloat(employee.bonusAmount || '0')
                     const tax = calculateSupplementalTax(bonusAmount)
                     const netBonus = calculateNetBonus(bonusAmount)
 
@@ -828,7 +828,7 @@ function BonusPayrollForm({ onBack, onSave }) {
 }
 
 // Off-Cycle Payroll Form Component
-function OffCyclePayrollForm({ onBack, onSave }) {
+function OffCyclePayrollForm({ onBack, onSave }: { onBack: () => void; onSave: (data: any) => void }) {
   const [currentStep, setCurrentStep] = useState(1)
   const [offCycleData, setOffCycleData] = useState({
     payFrequency: '',
@@ -841,8 +841,8 @@ function OffCyclePayrollForm({ onBack, onSave }) {
     },
     employees: []
   })
-  const [selectedEmployees, setSelectedEmployees] = useState([])
-  const [errors, setErrors] = useState({})
+  const [selectedEmployees, setSelectedEmployees] = useState<any[]>([])
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
   const payFrequencies = [
     { value: 'weekly', label: 'Weekly' },
@@ -861,7 +861,7 @@ function OffCyclePayrollForm({ onBack, onSave }) {
   ]
 
   const validateStep1 = () => {
-    const newErrors = {}
+    const newErrors: Record<string, string> = {}
     if (!offCycleData.payFrequency) newErrors.payFrequency = 'Pay frequency is required'
     if (!offCycleData.payPeriodStart) newErrors.payPeriodStart = 'Pay period start date is required'
     if (!offCycleData.payPeriodEnd) newErrors.payPeriodEnd = 'Pay period end date is required'
@@ -872,7 +872,7 @@ function OffCyclePayrollForm({ onBack, onSave }) {
   }
 
   const validateStep2 = () => {
-    const newErrors = {}
+    const newErrors: Record<string, string> = {}
     if (selectedEmployees.length === 0) {
       newErrors.employees = 'At least one employee must be added to the payroll'
     }
@@ -897,7 +897,7 @@ function OffCyclePayrollForm({ onBack, onSave }) {
     })
   }
 
-  const addEmployee = (employee) => {
+  const addEmployee = (employee: any) => {
     const newEmployee = {
       ...employee,
       regularHours: '',
@@ -912,17 +912,17 @@ function OffCyclePayrollForm({ onBack, onSave }) {
     setSelectedEmployees([...selectedEmployees, newEmployee])
   }
 
-  const removeEmployee = (employeeId) => {
+  const removeEmployee = (employeeId: string) => {
     setSelectedEmployees(selectedEmployees.filter(emp => emp.id !== employeeId))
   }
 
-  const updateEmployeeHours = (employeeId, field, value) => {
+  const updateEmployeeHours = (employeeId: string, field: string, value: string) => {
     setSelectedEmployees(selectedEmployees.map(emp => 
       emp.id === employeeId ? { ...emp, [field]: value } : emp
     ))
   }
 
-  const updateEmployeeEarnings = (employeeId, field, value) => {
+  const updateEmployeeEarnings = (employeeId: string, field: string, value: string) => {
     setSelectedEmployees(selectedEmployees.map(emp => 
       emp.id === employeeId ? { 
         ...emp, 
@@ -931,12 +931,12 @@ function OffCyclePayrollForm({ onBack, onSave }) {
     ))
   }
 
-  const calculateEmployeeTotal = (employee) => {
-    const regularPay = parseFloat(employee.regularHours || 0) * employee.rate
-    const overtimePay = parseFloat(employee.overtimeHours || 0) * employee.rate * 1.5
-    const doubleTimePay = parseFloat(employee.doubleTimeHours || 0) * employee.rate * 2
-    const bonus = parseFloat(employee.earnings.bonus || 0)
-    const commission = parseFloat(employee.earnings.commission || 0)
+  const calculateEmployeeTotal = (employee: any) => {
+    const regularPay = parseFloat(employee.regularHours || '0') * employee.rate
+    const overtimePay = parseFloat(employee.overtimeHours || '0') * employee.rate * 1.5
+    const doubleTimePay = parseFloat(employee.doubleTimeHours || '0') * employee.rate * 2
+    const bonus = parseFloat(employee.earnings.bonus || '0')
+    const commission = parseFloat(employee.earnings.commission || '0')
     
     return regularPay + overtimePay + doubleTimePay + bonus + commission
   }
@@ -1544,8 +1544,32 @@ function OffCyclePayrollForm({ onBack, onSave }) {
   )
 }
 
+// Journal Action Modal Component
+function JournalActionModal({ action, payroll, onClose, onConfirm }: { action: string; payroll: any; onClose: () => void; onConfirm: () => void }) {
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 w-full max-w-md">
+        <h3 className="text-lg font-semibold mb-4">
+          {action === 'post' ? 'Post Journal Entries' : 'Delete Journal Entries'}
+        </h3>
+        <p className="text-gray-600 mb-6">
+          Are you sure you want to {action === 'post' ? 'post' : 'delete'} journal entries for {payroll.payPeriod}?
+        </p>
+        <div className="flex justify-end space-x-3">
+          <button onClick={onClose} className="px-4 py-2 text-gray-600 hover:text-gray-800">
+            Cancel
+          </button>
+          <button onClick={onConfirm} className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+            {action === 'post' ? 'Post' : 'Delete'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // Payroll List Component
-function PayrollList({ payrolls, onSelectRun, activeTab }) {
+function PayrollList({ payrolls, onSelectRun, activeTab }: { payrolls: any[]; onSelectRun: (run: any) => void; activeTab: string }) {
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState('all')
   const [filterType, setFilterType] = useState('all')
@@ -1610,7 +1634,7 @@ function PayrollList({ payrolls, onSelectRun, activeTab }) {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredPayrolls.map((payroll) => {
-                  const status = statusConfig[payroll.status]
+                  const status = (statusConfig as any)[payroll.status]
                   const StatusIcon = status.icon
 
                   return (
@@ -1695,7 +1719,7 @@ function PayrollList({ payrolls, onSelectRun, activeTab }) {
       {/* Payroll Cards */}
       <div className="grid gap-4">
         {filteredPayrolls.map((payroll) => {
-          const status = statusConfig[payroll.status]
+          const status = (statusConfig as any)[payroll.status]
           const StatusIcon = status.icon
 
           return (
@@ -1767,17 +1791,17 @@ function PayrollList({ payrolls, onSelectRun, activeTab }) {
 }
 
 // Payroll Details Component
-function PayrollDetails({ payroll, onBack, selectedEmployee, setSelectedEmployee, showAddHours, setShowAddHours, setShowApprovalModal, setShowPaymentModal, setApprovalType }) {
-  const status = statusConfig[payroll.status]
+function PayrollDetails({ payroll, onBack, selectedEmployee, setSelectedEmployee, showAddHours, setShowAddHours, setShowApprovalModal, setShowPaymentModal, setApprovalType }: { payroll: any; onBack: () => void; selectedEmployee: any; setSelectedEmployee: (emp: any) => void; showAddHours: boolean; setShowAddHours: (show: boolean) => void; setShowApprovalModal: (show: boolean) => void; setShowPaymentModal: (show: boolean) => void; setApprovalType: (type: string) => void }) {
+  const status = (statusConfig as any)[payroll.status]
   const StatusIcon = status.icon
   const [showActionsDropdown, setShowActionsDropdown] = useState(false)
-  const [showEmployeeActions, setShowEmployeeActions] = useState({})
+  const [showEmployeeActions, setShowEmployeeActions] = useState<Record<string, boolean>>({})
   const [showJournalModal, setShowJournalModal] = useState(false)
   const [journalAction, setJournalAction] = useState('')
 
   const isHistoryView = payroll.status === 'paid'
 
-  const toggleEmployeeActions = (employeeId) => {
+  const toggleEmployeeActions = (employeeId: string) => {
     setShowEmployeeActions(prev => ({
       ...prev,
       [employeeId]: !prev[employeeId]
@@ -1795,12 +1819,12 @@ function PayrollDetails({ payroll, onBack, selectedEmployee, setSelectedEmployee
     setShowEmployeeActions({})
   }
 
-  const handleDownloadPayStub = (employeeId) => {
+  const handleDownloadPayStub = (employeeId: string) => {
     console.log(`Downloading pay stub for employee ${employeeId}`)
     setShowEmployeeActions(prev => ({ ...prev, [employeeId]: false }))
   }
 
-  const handleJournalAction = (action) => {
+  const handleJournalAction = (action: string) => {
     setJournalAction(action)
     setShowJournalModal(true)
     setShowActionsDropdown(false)
@@ -2027,7 +2051,7 @@ function PayrollDetails({ payroll, onBack, selectedEmployee, setSelectedEmployee
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {payroll.employees.map((employee) => (
+              {payroll.employees.map((employee: any) => (
                 <tr key={employee.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div>
@@ -2152,7 +2176,7 @@ function PayrollDetails({ payroll, onBack, selectedEmployee, setSelectedEmployee
 }
 
 // Employee Detail Panel Component
-function EmployeeDetailPanel({ employee, onClose, showAddHours, setShowAddHours }) {
+function EmployeeDetailPanel({ employee, onClose, showAddHours, setShowAddHours }: { employee: any; onClose: () => void; showAddHours: boolean; setShowAddHours: (show: boolean) => void }) {
   const [additionalHours, setAdditionalHours] = useState({
     jobRole: '',
     regularHours: '',
@@ -2317,7 +2341,7 @@ function EmployeeDetailPanel({ employee, onClose, showAddHours, setShowAddHours 
 }
 
 // Approval Modal Component
-function ApprovalModal({ payroll, approvalType, onClose, onConfirm }) {
+function ApprovalModal({ payroll, approvalType, onClose, onConfirm }: { payroll: any; approvalType: string; onClose: () => void; onConfirm: (data: any) => void }) {
   const [approvalData, setApprovalData] = useState({
     comments: ''
   })
@@ -2407,7 +2431,7 @@ function ApprovalModal({ payroll, approvalType, onClose, onConfirm }) {
 }
 
 // Payment Modal Component
-function PaymentModal({ payroll, onClose, onConfirm }) {
+function PaymentModal({ payroll, onClose, onConfirm }: { payroll: any; onClose: () => void; onConfirm: (data: any) => void }) {
   const [paymentData, setPaymentData] = useState({
     paidThroughAccount: 'Business Checking Account',
     paymentMode: 'Direct Deposit',
