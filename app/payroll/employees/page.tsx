@@ -27,7 +27,6 @@ import {
   CheckCircle,
   X,
   FileText,
-  Sync,
   Clock,
   Globe,
   Lock,
